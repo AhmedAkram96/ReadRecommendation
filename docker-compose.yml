@@ -11,12 +11,6 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=mydb
-    command: >
-      sh -c "
-        npx sequelize-cli db:migrate &&
-        npx sequelize-cli db:seed:all &&
-        npm start
-      "
     ports:
       - "3000:3000"
     volumes:

@@ -8,11 +8,14 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 
-# Copy source code
+# Copy all files (including entrypoint and wait-for-it)
 COPY . .
 
-# Expose port
+# Make sure scripts are executable
+RUN chmod +x entrypoint.sh wait-for-it.sh
+
+# Expose app port
 EXPOSE 3000
 
-# Start the app
-CMD npx sequelize-cli db:migrate && node index.js
+# Use entrypoint script
+ENTRYPOINT ["./entrypoint.sh"]
