@@ -1,12 +1,15 @@
 // middlewares/roleMiddleware.js
 const Roles = {
-  USER: 1,
-  ADMIN: 2,
+  user: 1,
+  admin: 2,
 };
 
 function authorize(requiredLevel) {
     return (req, res, next) => {
-      if (!req.user || req.user.userLevel < requiredLevel) {
+      const userLevel = Roles[req.user.userLevel];
+      console.log(userLevel);
+      console.log(requiredLevel);
+      if (!req.user || userLevel < requiredLevel) {
         return res.status(403).json({ error: 'Forbidden' });
       }
       next();

@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const http = require('http');
 const authRoutes = require('./routes/authRoutes');
+const bookRoutes = require('./routes/bookRoutes');
 const sequelize = require('./config/database');
 const User = require('./models/User');
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
   res.send('Read recommendation Server is running!');
 });
 app.use('/auth', authRoutes);
+app.use('/books', bookRoutes);
 
 // Database connection and server start
 const PORT = process.env.PORT || 3000;
