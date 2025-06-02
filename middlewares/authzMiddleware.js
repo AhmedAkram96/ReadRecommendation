@@ -7,8 +7,6 @@ const Roles = {
 function authorize(requiredLevel) {
     return (req, res, next) => {
       const userLevel = Roles[req.user.userLevel];
-      console.log(userLevel);
-      console.log(requiredLevel);
       if (!req.user || userLevel < requiredLevel) {
         return res.status(403).json({ error: 'Forbidden' });
       }
