@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  server:
+    build: .
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=mydb
+    command: >
+      sh -c "
+        npx sequelize-cli db:migrate &&
+        npx sequelize-cli db:seed:all &&
+        npm start
+      "
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
