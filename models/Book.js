@@ -1,7 +1,9 @@
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Book = sequelize.define('Book', {
+class Book extends Model {}
+
+Book.init({
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,8 +17,16 @@ const Book = sequelize.define('Book', {
   NoOfPages: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  totalReadPages: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
+  sequelize,
+  modelName: 'Book',
+  tableName: 'Books',
   timestamps: true
 });
 

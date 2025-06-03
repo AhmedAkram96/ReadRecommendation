@@ -1,5 +1,5 @@
 // repositories/userRepository.js
-const User = require('../models/User');
+const {User} = require('../models');
 
 const createUser = async (userData) => {
   return await User.create(userData);

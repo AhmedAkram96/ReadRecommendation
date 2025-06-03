@@ -1,4 +1,4 @@
-const Book = require('../models/Book');
+const {Book, BookReadingStats} = require('../models');
 
 class BookRepository {
   async create(bookData) {
@@ -19,6 +19,16 @@ class BookRepository {
 
   async findAll() {
     return await Book.findAll();
+  }
+
+  async getTopReadBooks(limit = 5) {
+    return await Book.findAll({
+      order: [
+        ['totalReadPages', 'DESC'],
+        ['createdAt', 'DESC'] // Secondary sort by creation date for books with same read pages
+      ],
+      limit
+    });
   }
 }
 

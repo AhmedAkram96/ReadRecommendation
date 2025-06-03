@@ -1,12 +1,15 @@
 // models/User.js
-const { DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Reading = require('./Reading');
 
-const User = sequelize.define('User', {
+class User extends Model {}
+
+User.init({
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
   username: {
     type: DataTypes.STRING,
@@ -23,6 +26,9 @@ const User = sequelize.define('User', {
     allowNull: false
   }
 }, {
+  sequelize,
+  modelName: 'User',
+  tableName: 'Users',
   timestamps: true
 });
 

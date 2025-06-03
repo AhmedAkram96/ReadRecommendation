@@ -7,12 +7,16 @@ const { Roles } = require('../middlewares/authzMiddleware');
 
 const router = express.Router();
 
-// Authenticated user routes
-router.get('/', authenticate, authorize(Roles.user), bookController.getAllBooks);
-router.get('/:id', authenticate, authorize(Roles.user), bookController.getBook);
+// Protected routes
+router.use(authenticate);
 
-// Protected routes (admin only)
-router.post('/', authenticate, authorize(Roles.admin), bookController.createBook);
-router.put('/:id', authenticate, authorize(Roles.admin), bookController.updateBook);
+// Admin only routes
+router.post('/', authorize(Roles.admin), bookController.createBook);
+router.put('/:id', authorize(Roles.admin), bookController.updateBook);
+
+// User routes
+router.get('/top-read', bookController.getTopReadBooks);
+router.get('/', bookController.getAllBooks);
+router.get('/:id', bookController.getBook);
 
 module.exports = router; 

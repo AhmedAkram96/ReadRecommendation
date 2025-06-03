@@ -1,4 +1,5 @@
 const bookRepository = require('../repositories/bookRepository');
+const ApiError = require('../utils/ApiError');
 
 class BookService {
   async createBook(bookData) {
@@ -33,6 +34,19 @@ class BookService {
 
   async getAllBooks() {
     return await bookRepository.findAll();
+  }
+
+  async getTopReadBooks(limit = 5) {
+    const books = await bookRepository.getTopReadBooks(limit);    
+    // Format the response to include reading statistics
+    return books.map(book => {
+      return {
+        id: book.id,
+        name: book.name,
+        NoOfPages: book.NoOfPages,
+        totalReadPages: book.totalReadPages,
+      };
+    });
   }
 }
 
