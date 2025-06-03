@@ -5,8 +5,9 @@ const cors = require('cors');
 const http = require('http');
 const authRoutes = require('./routes/authRoutes');
 const bookRoutes = require('./routes/bookRoutes');
+const readingRoutes = require('./routes/readingRoutes');
 const sequelize = require('./config/database');
-const User = require('./models/User');
+const errorHandler = require('./middlewares/errorHandlerMiddleware');
 
 // Load environment variables
 dotenv.config();
@@ -25,6 +26,10 @@ app.get('/', (req, res) => {
 });
 app.use('/auth', authRoutes);
 app.use('/books', bookRoutes);
+app.use('/readings', readingRoutes);
+
+// Error handling middleware (should be last)
+app.use(errorHandler);
 
 // Database connection and server start
 const PORT = process.env.PORT || 3000;
