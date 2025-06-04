@@ -175,7 +175,7 @@ The application uses a centralized error handling system:
 - Input validation
 - SQL injection prevention through Sequelize
 
-note: If you tried to run the app after testing, make sure ti run the following commands to avoid network issues:
+**Note:** If you tried to run the app after testing, make sure ti run the following commands to avoid network issues:
 
-- docker-compose -f docker-compose.test.yml down -v
-- docker-compose down -v
+  - `docker-compose -f docker-compose.test.yml down -v`
+  - `docker-compose down -v`
