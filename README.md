@@ -1,48 +1,166 @@
-# ReadRecommendation
+# Read Recommendation System
 
-This is the proposed solution for the task provided by Octane
+A robust book recommendation system built with Node.js, Express, and PostgreSQL, following the N-Tier architecture pattern. This system allows users to track their reading progress, get book recommendations, and manage their reading lists.
 
-## User Functionality
+## Features
 
-1. Admin can add/update books
-2. All users can view all or one book
-3. All users can submit readings
-4. All users can ask for top read book (by unique pages)
+- **User Management**
+  - User registration and authentication
+  - Role-based access control (Admin/User)
+  - JWT-based authentication
 
-### top rating logic:
-- we keep track of all the submitted readings for the same book as unique ranges.
-- Whenever the user submit a new reading:
-    - We get all that book unique ranges
-    - Insert the new reading in a way that keeps all the ranges unique (unique range merge technique)
-    - Count all the unique pages represented by these unqiue ranges and update the Book unique pages.
+- **Book Management**
+  - CRUD operations for books
+  - Book metadata tracking (pages, read status)
+  - Reading progress tracking
+
+- **Reading Statistics**
+  - Track reading progress
+  - Calculate reading statistics
+  - View reading history
+
+## Technology Stack
+
+- **Backend**
+  - Node.js
+  - Express.js
+  - Sequelize ORM
+  - PostgreSQL
+  - JWT Authentication
+
+- **Testing**
+  - Jest
+  - Supertest
+  - Docker for test environment
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- Docker and Docker Compose
+- PostgreSQL (if running locally)
+
+## 🔧 Installation
+
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:AhmedAkram96/ReadRecommendation.git
+   cd readrecommendation
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create environment files:
+   ```bash
+   # Development environment
+   cp .env
+   
+   # Test environment
+   cp .env.test
+   ```
+
+4. Configure environment variables in `.env` and `.env.test` files.
+
+## Running the Application
+
+### Development Mode
+
+1. Start the application using Docker:
+   ```bash
+   docker-compose up --build
+   ```
+
+2. Or run locally:
+   ```bash
+   npm start
+   ```
+
+The server will start on port 3000 by default.
+
+### Testing
+
+1. Run tests with Docker:
+   ```bash
+   npm run test:docker
+   ```
+
+2. Run tests locally:
+   ```bash
+   npm test
+   ```
+
+## Project Structure
+
+```
+readrecommendation/
+├── config/             # Configuration files
+├── controllers/        # Request handlers
+├── middlewares/        # Custom middleware
+├── models/            # Database models
+├── repositories/      # Data access layer
+├── routes/            # API routes
+├── services/          # Business logic
+├── utils/             # Utility functions
+├── migrations/        # Database migrations
+├── seeders/          # Database seeders
+└── __tests__/        # Test files
+```
+
+## API Endpoints
+
+### Authentication
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - User login
+
+### Books
+- `GET /books` - Get all books
+- `GET /books/:id` - Get book by ID
+- `POST /books` - Create new book (Admin only)
+- `PUT /books/:id` - Update book (Admin only)
+
+### Readings
+- `POST /readings` - Create reading record
+- `GET /readings/user` - Get user's reading history
+- `GET /readings/book/:id` - Get book's reading records
+
+## Testing Strategy
+
+The project uses Jest for testing with the following test types:
+- Unit tests for individual components
+- Integration tests for API endpoints
+
+Test environment uses a separate PostgreSQL database in Docker to ensure test isolation.
+
+## Database Migrations
+
+Run migrations:
+```bash
+npx sequelize-cli db:migrate
+```
+
+Undo migrations:
+```bash
+npx sequelize-cli db:migrate:undo
+```
 
 
-## Development Functionality:
+## 🔍 Error Handling
 
-1. Node.js and Express server
-2. Postgresql as DB
-3. Authentication provided using JWT
-4. Authorization middleware to enforce user level permissions
-5. Error handling Middleware to catch thrown errors in the application layer
-6. Seeding script to create admin user
-7. Containerized dev app using docker-compose:
-    - Server container
-    - Database container
-8. Containerized test app using docker-compose:
-    - Database container
-9. Test cases sample for booking creation (to be extended)
+The application uses a centralized error handling system:
+- Custom `ApiError` class for consistent error responses
+- Error logging middleware
+- Proper HTTP status codes
 
-## How to run
+## Security
 
-### Run app locally:
-1. Open temrinal in the root of the app and run `docker-compose up --build`
-2. use the `postmanCollection/Octane.json` collection to test the server endpoints
-
-### Test app:
-1. Run `npm run test:docker`
-
+- JWT-based authentication
+- Password hashing
+- Input validation
+- SQL injection prevention through Sequelize
 
 note: If you tried to run the app after testing, make sure ti run the following commands to avoid network issues:
-- `docker-compose -f docker-compose.test.yml down -v`
-- `docker-compose down -v`
 
+- docker-compose -f docker-compose.test.yml down -v
+- docker-compose down -v
