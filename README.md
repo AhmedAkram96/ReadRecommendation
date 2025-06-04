@@ -19,6 +19,21 @@ A robust book recommendation system built with Node.js, Express, and PostgreSQL,
   - Calculate reading statistics
   - View reading history
 
+- **Top Rating Logic**
+  - Track unique page ranges for each book
+  - Merge overlapping reading ranges
+  - Calculate total unique pages read
+  - Update book statistics automatically
+
+  The system implements a sophisticated algorithm for tracking reading progress:
+  1. Each book maintains a collection of unique page ranges
+  2. When a user submits a new reading:
+     - System retrieves all existing unique ranges for the book
+     - New reading range is merged with existing ranges
+     - Overlapping ranges are consolidated
+     - Total unique pages are recalculated
+     - Book's reading statistics are updated
+
 ## Technology Stack
 
 - **Backend**
