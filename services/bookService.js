@@ -5,11 +5,11 @@ class BookService {
   async createBook(bookData) {
     // Validate book data
     if (!bookData.name || !bookData.NoOfPages) {
-      throw new Error('Name and number of pages are required');
+      throw new ApiError(400, 'Name and number of pages are required');
     }
 
     if (bookData.NoOfPages <= 0) {
-      throw new Error('Number of pages must be greater than 0');
+      throw new ApiError(400, 'Number of pages must be greater than 0');
     }
 
     return await bookRepository.create(bookData);
@@ -18,16 +18,20 @@ class BookService {
   async updateBook(id, bookData) {
     // Validate book data
     if (bookData.NoOfPages && bookData.NoOfPages <= 0) {
-      throw new Error('Number of pages must be greater than 0');
+      throw new ApiError(400, 'Number of pages must be greater than 0');
     }
 
-    return await bookRepository.update(id, bookData);
+    const book = await bookRepository.update(id, bookData);
+    if (!book) {
+      throw new ApiError(404, 'Book not found');
+    }
+    return book;
   }
 
   async getBook(id) {
     const book = await bookRepository.findById(id);
     if (!book) {
-      throw new Error('Book not found');
+      throw new ApiError(404, 'Book not found');
     }
     return book;
   }

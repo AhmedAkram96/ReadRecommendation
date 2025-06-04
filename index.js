@@ -1,16 +1,15 @@
 // index.js
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
+const { Sequelize } = require('sequelize');
+const path = require('path');
 const http = require('http');
 const authRoutes = require('./routes/authRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const readingRoutes = require('./routes/readingRoutes');
-const sequelize = require('./config/database');
 const errorHandler = require('./middlewares/errorHandlerMiddleware');
+const config = require('./config/config');
 
-// Load environment variables
-dotenv.config();
 
 // Initialize Express app
 const app = express();
@@ -19,6 +18,24 @@ const server = http.createServer(app);
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Database configuration
+const env = process.env.NODE_ENV || 'development';
+const sequelize = new Sequelize(config[env]);
+
+// Test database connection
+const testConnection = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connection established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+    // Only exit in non-test environment
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(1);
+    }
+  }
+};
 
 // Routes
 app.get('/', (req, res) => {
@@ -31,26 +48,14 @@ app.use('/readings', readingRoutes);
 // Error handling middleware (should be last)
 app.use(errorHandler);
 
-// Database connection and server start
-const PORT = process.env.PORT || 3000;
-
-const startServer = async () => {
-  try {
-    // Sync database (creates tables if they don't exist)
-    await sequelize.sync();
-    console.log('Database synchronized successfully');
-
-    // Start the server
-    server.listen(PORT, () => {
-      console.log(`Read recommendation Server is running on port ${PORT}`);
+// Start server only in non-test environment
+if (process.env.NODE_ENV !== 'test') {
+  testConnection().then(() => {
+    server.listen(process.env.PORT || 3000, () => {
+      console.log(`Read recommendation Server is running on port ${process.env.PORT || 3000}`);
     });
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-    process.exit(1);
-  }
-};
-
-startServer();
+  });
+}
 
 // shutdown function
 const shutdown = async () => {
@@ -77,3 +82,5 @@ const shutdown = async () => {
 // Listen for termination signals
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
+
+module.exports = app;
